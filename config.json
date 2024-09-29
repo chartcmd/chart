@@ -1,0 +1,20 @@
+{
+    "chart_colors": {
+        "up": "green",
+        "down": "red"
+    },
+    "list_cmd_tickers": {
+        "equities": [
+            "SPY",
+            "QQQ",
+            "TSLA",
+            "AAPL"
+        ],
+        "crypto": [
+            "BTC",
+            "ETH",
+            "SOL",
+            "DOGE"
+        ]
+    }
+}
