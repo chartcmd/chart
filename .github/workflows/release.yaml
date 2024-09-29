@@ -1,0 +1,94 @@
+name: Create Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  create_release:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: '1.20'  # Specify the Go version you're using
+
+    - name: Build for Mac
+      run: |
+        GOOS=darwin GOARCH=amd64 go build -o chart-mac ./cmd
+        chmod +x chart-mac
+
+    - name: Build for Linux
+      run: |
+        GOOS=linux GOARCH=amd64 go build -o chart-linux ./cmd
+        chmod +x chart-linux
+
+    - name: Create Mac Installation Script
+      run: |
+        echo '#!/bin/bash
+        sudo mv chart-mac /usr/local/bin/chart
+        sudo chmod +x /usr/local/bin/chart
+        echo "Installation complete. You can now use the '"'"'chart'"'"' command."' > install-mac.sh
+        chmod +x install-mac.sh
+
+    - name: Create Linux Installation Script
+      run: |
+        echo '#!/bin/bash
+        sudo mv chart-linux /usr/local/bin/chart
+        sudo chmod +x /usr/local/bin/chart
+        echo "Installation complete. You can now use the '"'"'chart'"'"' command."' > install-linux.sh
+        chmod +x install-linux.sh
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ github.run_number }}
+        release_name: Release v${{ github.run_number }}
+        draft: false
+        prerelease: false
+
+    - name: Upload Mac Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./chart-mac
+        asset_name: chart-mac
+        asset_content_type: application/octet-stream
+
+    - name: Upload Linux Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./chart-linux
+        asset_name: chart-linux
+        asset_content_type: application/octet-stream
+
+    - name: Upload Mac Install Script
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./install-mac.sh
+        asset_name: install-mac.sh
+        asset_content_type: text/x-shellscript
+
+    - name: Upload Linux Install Script
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./install-linux.sh
+        asset_name: install-linux.sh
+        asset_content_type: text/x-shellscript

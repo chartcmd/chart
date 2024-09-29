@@ -12,12 +12,9 @@ type Candle struct {
 }
 
 type Config struct {
-	ChartColors struct {
-		Up   string `json:"up"`
-		Down string `json:"down"`
-	} `json:"chart_colors"`
-	ListCmdTickers struct {
-		Equities []string `json:"equities"`
-		Crypto   []string `json:"crypto"`
-	} `json:"list_cmd_tickers"`
+	UpColor           string   `json:"up_color"`
+	DownColor         string   `json:"down_color"`
+	DefaultTimeFrame  string   `json:"default_tf"`
+	EquitiesWatchlist []string `json:"equity_wl"`
+	CryptoWatchlist   []string `json:"crypto_wl"`
 }

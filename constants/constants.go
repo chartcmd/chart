@@ -98,10 +98,10 @@ func init() {
 			fmt.Println("Error decoding JSON:", err)
 			os.Exit(1)
 		}
-		UpColor = ColorToAnsi[Config.ChartColors.Up]
-		DownColor = ColorToAnsi[Config.ChartColors.Down]
-		Equities = Config.ListCmdTickers.Equities
-		Crypto = Config.ListCmdTickers.Crypto
+		UpColor = ColorToAnsi[Config.UpColor]
+		DownColor = ColorToAnsi[Config.DownColor]
+		Equities = Config.EquitiesWatchlist
+		Crypto = Config.CryptoWatchlist
 	}
 
 	width, height, err := term.GetSize(0)

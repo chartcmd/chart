@@ -1,21 +1,17 @@
 {
     "default_tf": "1d",
-    "chart_colors": {
-        "up": "green",
-        "down": "red"
-    },
-    "list_cmd_tickers": {
-        "equities": [
-            "SPY",
-            "QQQ",
-            "TSLA",
-            "AAPL"
-        ],
-        "crypto": [
-            "BTC",
-            "ETH",
-            "SOL",
-            "DOGE"
-        ]
-    }
+    "up_color": "green",
+    "down_color": "red",
+    "equity_wl": [
+        "SPY",
+        "QQQ",
+        "TSLA",
+        "AAPL"
+    ],
+    "crypto_wl": [
+        "BTC",
+        "ETH",
+        "SOL",
+        "DOGE"
+    ]
 }
