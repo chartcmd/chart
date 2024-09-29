@@ -106,7 +106,7 @@ func init() {
 
 	width, height, err := term.GetSize(0)
 	if err == nil {
-		ChartBodyCols = uint32(utils.GetClosestNumDivBy(32, width))
+		ChartBodyCols = uint32(utils.GetClosestNumDivBy(32, width-6))
 		ChartBodyRows = uint32(utils.GetClosestNumDivBy(8, height-10))
 		NumCandles = ChartBodyCols
 		NumYLabels = uint32(ChartBodyRows / 4)
