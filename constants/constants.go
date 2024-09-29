@@ -16,14 +16,17 @@ var (
 	CoinbaseCandleEndpointUrl     = "/products/%s/candles"
 	CoinbaseCandleEndpointFullUrl = "%s%s?start=%s&end=%s&granularity=%d"
 
-	ChartBodyCols        uint32 = 128
-	ChartBodyRows        uint32 = 32
-	ChartTopPadding      uint32 = 2
-	ChartBottomPadding   uint32 = 2
-	ChartAddlBottomSpace uint32 = 2
-	NumYLabels           uint32 = uint32(ChartBodyRows / 4)
-	NumXLabels           uint32 = NumYLabels
-	NumCandles           uint32 = 128
+	ChartBodyCols         uint32 = 128
+	ChartBodyRows         uint32 = 32
+	ChartTopPadding       uint32 = 2
+	ChartBottomPadding    uint32 = 2
+	ChartAddlBottomSpace  uint32 = 2
+	ChartBodyRightPadding uint32 = 1
+	ChartBodyLeftPadding  uint32 = 4
+	ChartXAxisLeftPadding uint32 = 2
+	NumYLabels            uint32 = uint32(ChartBodyRows / 4)
+	NumXLabels            uint32 = NumYLabels
+	NumCandles            uint32 = 128
 
 	CandleBody string = "█"
 	WickBody   string = "│"
@@ -75,19 +78,17 @@ func init() {
 	fileContent, err := os.ReadFile("config.json")
 	if err != nil {
 		fmt.Println("Error reading config file:", err)
-		os.Exit(1)
+	} else {
+		err = json.Unmarshal(fileContent, &Config)
+		if err != nil {
+			fmt.Println("Error decoding JSON:", err)
+			os.Exit(1)
+		}
+		UpColor = ColorToAnsi[Config.ChartColors.Up]
+		DownColor = ColorToAnsi[Config.ChartColors.Down]
+		Equities = Config.ListCmdTickers.Equities
+		Crypto = Config.ListCmdTickers.Crypto
 	}
-
-	err = json.Unmarshal(fileContent, &Config)
-	if err != nil {
-		fmt.Println("Error decoding JSON:", err)
-		os.Exit(1)
-	}
-
-	UpColor = ColorToAnsi[Config.ChartColors.Up]
-	DownColor = ColorToAnsi[Config.ChartColors.Down]
-	Equities = Config.ListCmdTickers.Equities
-	Crypto = Config.ListCmdTickers.Crypto
 
 	width, height, err := term.GetSize(0)
 	if err == nil {

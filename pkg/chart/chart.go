@@ -38,17 +38,21 @@ func DrawChart(ticker string, interval string) error {
 	}
 
 	candles := parseCandleStick(data)
-	latestPrice := candles[0].Close
-	chart, leftPadding := build_chart.BuildChart(candles, int(end.Sub(start).Minutes()))
+	latestPrice := candles[len(candles)-1].Close
+	chart := build_chart.BuildChart(candles, int(end.Sub(start).Minutes()))
 
-	display(ticker, latestPrice, chart, leftPadding)
+	display(ticker, latestPrice, chart)
 	return nil
 }
 
-func display(ticker string, latestPrice float64, chart string, leftPadding int) {
+func display(ticker string, latestPrice float64, chart string) {
 	constants.ClearScreen()
 	ticker = strings.ToUpper(ticker)
-	fmt.Printf("\n%*s%s: $%.2f\n\n", leftPadding-1, "", constants.UpColor+ticker, latestPrice)
+	if latestPrice < 0.1 {
+		fmt.Printf("\n%*s%s: $%.8f\n", 4, "", constants.UpColor+ticker, latestPrice)
+	} else {
+		fmt.Printf("\n%*s%s: $%.2f\n", 4, "", constants.UpColor+ticker, latestPrice)
+	}
 	fmt.Println(chart + constants.ResetColor)
 	fmt.Println()
 }

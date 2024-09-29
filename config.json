@@ -1,4 +1,5 @@
 {
+    "default_tf": "1d",
     "chart_colors": {
         "up": "green",
         "down": "red"

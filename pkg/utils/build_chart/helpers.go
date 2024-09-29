@@ -11,14 +11,6 @@ import (
 	"github.com/chartcmd/chart/types"
 )
 
-func meshBodyToView(chartView *[][]string, chartBody [][]string, leftPadding int) {
-	for i, row := range chartBody {
-		for j, char := range row {
-			(*chartView)[int(i)+int(c.ChartTopPadding)][leftPadding+j] = char
-		}
-	}
-}
-
 func getChartBodyYIdx(price float64, max float64, min float64) int {
 	idx := float64(c.ChartBodyRows) - (price-min)/(max-min)*float64(c.ChartBodyRows)
 	idx = math.Round(idx)

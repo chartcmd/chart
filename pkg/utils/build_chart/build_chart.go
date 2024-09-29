@@ -1,13 +1,15 @@
 package build_chart
 
 import (
+	"fmt"
+
 	c "github.com/chartcmd/chart/constants"
 	"github.com/chartcmd/chart/types"
 )
 
-func BuildChart(candles []types.Candle, timeDuration int) (string, int) {
+func BuildChart(candles []types.Candle, timeDuration int) string {
 	priceLabels := getRoundPriceLabels(candles)
-	leftPadding := lengthOfMaxLabel(priceLabels) + 2
+	rightPadding := lengthOfMaxLabel(priceLabels) + 2
 
 	topPriceLabel := priceLabels[len(priceLabels)-1]
 	bottomPriceLabel := priceLabels[0]
@@ -16,21 +18,27 @@ func BuildChart(candles []types.Candle, timeDuration int) (string, int) {
 	chartBody := initChartBody()
 	fillCandles(&chartBody, candles, topPriceLabel, bottomPriceLabel, pricePerYUnit)
 
-	chartView := initChartView(leftPadding)
-	fillYAxis(&chartView, leftPadding, priceLabels, topPriceLabel, bottomPriceLabel)
-	fillXAxis(&chartView, candles, leftPadding)
+	chartView := initChartView(rightPadding, chartBody)
+	fmt.Println(matrixToString(chartView))
+	fillYAxis(&chartView, priceLabels, topPriceLabel, bottomPriceLabel)
+	fmt.Println(matrixToString(chartView))
+	fillXAxis(&chartView, candles)
 
-	meshBodyToView(&chartView, chartBody, leftPadding)
-
-	return matrixToString(chartView), leftPadding
+	return matrixToString(chartView)
 }
 
-func initChartView(leftPadding int) [][]string {
+func initChartView(rightPadding int, chartBody [][]string) [][]string {
 	chart := make([][]string, c.ChartBodyRows+c.ChartTopPadding+c.ChartBottomPadding+c.ChartAddlBottomSpace)
 	for i := range chart {
-		chart[i] = make([]string, c.ChartBodyCols+uint32(leftPadding))
+		chart[i] = make([]string, c.ChartBodyCols+uint32(rightPadding)+c.ChartBodyRightPadding+c.ChartBodyLeftPadding)
 		for j := range chart[i] {
 			chart[i][j] = " "
+		}
+	}
+
+	for i, row := range chartBody {
+		for j, char := range row {
+			chart[int(i)+int(c.ChartTopPadding)][j] = char
 		}
 	}
 	return chart
