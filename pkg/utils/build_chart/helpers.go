@@ -203,6 +203,7 @@ func getRoundPriceLabels(candles []types.Candle) []float64 {
 	if labels[len(labels)-1] < max {
 		labels = append(labels, math.Round(max*1e10)/1e10)
 	}
+
 	return labels
 }
 

@@ -50,9 +50,9 @@ func display(ticker string, latestPrice float64, chart string) {
 	constants.ClearScreen()
 	ticker = strings.ToUpper(ticker)
 	if latestPrice < 0.1 {
-		fmt.Printf("\n%*s%s: $%.8f\n", 4, "", constants.UpColor+ticker, latestPrice)
+		fmt.Printf("\n%*s%s: $%.8f\n", 4, "", constants.UpColorBold+ticker, latestPrice)
 	} else {
-		fmt.Printf("\n%*s%s: $%.2f\n", 4, "", constants.UpColor+ticker, latestPrice)
+		fmt.Printf("\n%*s%s: $%.2f\n", 4, "", constants.UpColorBold+ticker, latestPrice)
 	}
 	fmt.Println(chart + constants.ResetColor)
 	fmt.Println()

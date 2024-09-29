@@ -53,7 +53,7 @@ func fillCandles(chartBody *[][]string, candles []types.Candle, max float64, min
 
 		sizeOfDownWick := math.Abs(candle.Low-math.Min(candle.Open, candle.Close)) / pricePerYUnit
 		if sizeOfDownWick > 0.5 {
-			rowIdx := getChartBodyYIdx(math.Max(candle.Open, candle.Close), max, min)
+			rowIdx := getChartBodyYIdx(math.Min(candle.Open, candle.Close), max, min)
 			for j := range int(sizeOfDownWick) + 1 {
 				insertCandleWick(chartBody, rowIdx, colIdx, j, 1, candle.IsGreen)
 			}
