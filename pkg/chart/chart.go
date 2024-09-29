@@ -17,11 +17,12 @@ func parseCandleStick(candles [][]float64) []types.Candle {
 	for i := range candles {
 		candle := candles[numCandles-1-i]
 		result = append(result, types.Candle{
-			Time:  time.Unix(int64(candle[0]), 0).Add(7 * time.Hour),
-			Low:   candle[1],
-			High:  candle[2],
-			Open:  candle[3],
-			Close: candle[4],
+			Time:    time.Unix(int64(candle[0]), 0),
+			Low:     candle[1],
+			High:    candle[2],
+			Open:    candle[3],
+			Close:   candle[4],
+			IsGreen: candle[3] < candle[4],
 		})
 	}
 	return result
@@ -39,7 +40,7 @@ func DrawChart(ticker string, interval string) error {
 
 	candles := parseCandleStick(data)
 	latestPrice := candles[len(candles)-1].Close
-	chart := build_chart.BuildChart(candles, int(end.Sub(start).Minutes()))
+	chart := build_chart.BuildChart(candles)
 
 	display(ticker, latestPrice, chart)
 	return nil

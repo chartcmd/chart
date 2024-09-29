@@ -1,13 +1,11 @@
 package build_chart
 
 import (
-	"fmt"
-
 	c "github.com/chartcmd/chart/constants"
 	"github.com/chartcmd/chart/types"
 )
 
-func BuildChart(candles []types.Candle, timeDuration int) string {
+func BuildChart(candles []types.Candle) string {
 	priceLabels := getRoundPriceLabels(candles)
 	rightPadding := lengthOfMaxLabel(priceLabels) + 2
 
@@ -18,16 +16,14 @@ func BuildChart(candles []types.Candle, timeDuration int) string {
 	chartBody := initChartBody()
 	fillCandles(&chartBody, candles, topPriceLabel, bottomPriceLabel, pricePerYUnit)
 
-	chartView := initChartView(rightPadding, chartBody)
-	fmt.Println(matrixToString(chartView))
+	chartView := initChartView(chartBody, rightPadding)
 	fillYAxis(&chartView, priceLabels, topPriceLabel, bottomPriceLabel)
-	fmt.Println(matrixToString(chartView))
 	fillXAxis(&chartView, candles)
 
 	return matrixToString(chartView)
 }
 
-func initChartView(rightPadding int, chartBody [][]string) [][]string {
+func initChartView(chartBody [][]string, rightPadding int) [][]string {
 	chart := make([][]string, c.ChartBodyRows+c.ChartTopPadding+c.ChartBottomPadding+c.ChartAddlBottomSpace)
 	for i := range chart {
 		chart[i] = make([]string, c.ChartBodyCols+uint32(rightPadding)+c.ChartBodyRightPadding+c.ChartBodyLeftPadding)

@@ -3,11 +3,12 @@ package types
 import "time"
 
 type Candle struct {
-	Time  time.Time
-	Low   float64
-	High  float64
-	Open  float64
-	Close float64
+	Time    time.Time
+	Low     float64
+	High    float64
+	Open    float64
+	Close   float64
+	IsGreen bool
 }
 
 type Config struct {

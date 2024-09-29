@@ -54,16 +54,19 @@ func getPricePerYUnit(max float64, min float64) float64 {
 }
 
 func formatTimestamp(ts time.Time) string {
-	if ts.Minute() == 0 {
-		if ts.Hour() == 0 {
-			if ts.Day() == 1 {
-				return ts.Format("Jan")
-			}
-			return strconv.Itoa(ts.Day())
-		}
+	if ts.Minute() != 0 {
+		return fmt.Sprintf("%02d:%02d", ts.Hour(), ts.Minute())
+	}
+	if ts.Hour() != 0 {
 		return fmt.Sprintf("%02d:00", ts.Hour())
 	}
-	return fmt.Sprintf("%02d:%02d", ts.Hour(), ts.Minute())
+	if ts.Day() == 1 {
+		return ts.Format("Jan")
+	}
+	if ts.Month() == 1 {
+		return strconv.Itoa(ts.Year())
+	}
+	return strconv.Itoa(ts.Day())
 }
 
 func getTimestampLabels(timestamps []time.Time) ([]int, []string) {
