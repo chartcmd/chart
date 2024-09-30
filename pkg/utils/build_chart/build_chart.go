@@ -7,7 +7,7 @@ import (
 
 func BuildChart(candles []types.Candle) string {
 	priceLabels := getRoundPriceLabels(candles)
-	rightPadding := lengthOfMaxLabel(priceLabels) + 2
+	rightPadding := maxLengthOfLabel(priceLabels) + 2
 
 	topPriceLabel := priceLabels[len(priceLabels)-1]
 	bottomPriceLabel := priceLabels[0]

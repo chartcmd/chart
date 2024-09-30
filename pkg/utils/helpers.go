@@ -1,5 +1,10 @@
 package utils
 
+import (
+	"os"
+	"os/exec"
+)
+
 func GetClosestNumDivBy(num, threshold int) int {
 	prev := num
 	for {
@@ -13,4 +18,10 @@ func GetClosestNumDivBy(num, threshold int) int {
 
 func Fill(text, color string) string {
 	return color + text + "\033[0m"
+}
+
+func ClearScreen() {
+	cmd := exec.Command("clear")
+	cmd.Stdout = os.Stdout
+	cmd.Run()
 }

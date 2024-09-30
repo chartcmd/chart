@@ -69,6 +69,7 @@ func formatTimestamp(ts time.Time) string {
 	return strconv.Itoa(ts.Day())
 }
 
+// TODO: hardcode based on granularity
 func getTimestampLabels(timestamps []time.Time) ([]int, []string) {
 	if len(timestamps) == 0 {
 		return nil, nil
@@ -172,6 +173,7 @@ func getRoundnessTimestampScore(ts time.Time) int {
 	return 17
 }
 
+// TODO fix so it doesn't get labels below first label < min
 func getRoundPriceLabels(candles []types.Candle) []float64 {
 	max := getMaxPrice(candles)
 	min := getMinPrice(candles)
@@ -211,7 +213,7 @@ func float64ToStr(f float64) string {
 	return strconv.FormatFloat(f, 'f', -1, 64)
 }
 
-func lengthOfMaxLabel(priceLabels []float64) int {
+func maxLengthOfLabel(priceLabels []float64) int {
 	maxLen := 0
 	for _, f := range priceLabels {
 		s := float64ToStr(f)

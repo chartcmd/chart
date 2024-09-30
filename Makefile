@@ -4,10 +4,13 @@ GOCLEAN=$(GOCMD) clean
 GOTEST=$(GOCMD) test
 GOGET=$(GOCMD) get
 BINARY_NAME=chart
-BINARY_UNIX=$(BINARY_NAME)_unix
+BINARY_UNIX=$(BINARY_NAME)
 
 build:
 	$(GOBUILD) -o out/bin/$(BINARY_NAME) -v ./cmd
+
+build-linux:
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GOBUILD) -o out/bin/$(BINARY_UNIX) -v ./cmd
 
 test:
 	$(GOTEST) -v ./...
@@ -29,9 +32,6 @@ vet:
 
 fmt:
 	$(GOCMD) fmt ./...
-
-build-linux:
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GOBUILD) -o out/bin/$(BINARY_UNIX) -v ./cmd
 
 prod-mac:
 	$(GOBUILD) $(LDFLAGS) -o out/bin/$(BINARY_NAME) -v ./cmd

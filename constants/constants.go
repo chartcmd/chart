@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"os/exec"
+	"time"
 
 	"github.com/chartcmd/chart/pkg/utils"
 	"github.com/chartcmd/chart/types"
@@ -18,7 +18,7 @@ var (
 
 	ChartBodyCols          uint32 = 128
 	ChartBodyRows          uint32 = 32
-	ChartTopPadding        uint32 = 2
+	ChartTopPadding        uint32 = 1
 	ChartBottomPadding     uint32 = 2
 	ChartAddlBottomSpace   uint32 = 2
 	ChartBodyRightPadding  uint32 = 1
@@ -36,6 +36,20 @@ var (
 	YAxis      string = "|"
 	XAxis      string = "-"
 
+	// TODO: add time difference from UTC (-(time.Local.Sub(time.UTC)).Hours())
+	CoinbaseCandleMax   uint32        = 300
+	TimeDiffUTC         time.Duration = 0
+	StreamRefreshRateMS uint32        = 500
+
+	Intervals []string = []string{
+		"1m",
+		"5m",
+		"15m",
+		"1h",
+		"6h",
+		"1d",
+	}
+
 	IntervalToGranularity = map[string]uint32{
 		"1m":  60,
 		"5m":  300,
@@ -46,16 +60,19 @@ var (
 	}
 
 	ColorToAnsi = map[string]string{
-		"black":        "\033[30m",
-		"red":          "\033[91m",
-		"green":        "\033[92m",
-		"yellow":       "\033[93m",
-		"purple":       "\033[34m",
-		"magenta":      "\033[95m",
-		"cyan":         "\033[96m",
-		"white":        "\033[97m",
-		"gray":         "\033[90m",
-		"pink":         "\033[94m",
+		// colors
+		"black":   "\033[30m",
+		"red":     "\033[91m",
+		"green":   "\033[92m",
+		"yellow":  "\033[93m",
+		"purple":  "\033[34m",
+		"magenta": "\033[95m",
+		"cyan":    "\033[96m",
+		"white":   "\033[97m",
+		"gray":    "\033[90m",
+		"pink":    "\033[94m",
+
+		// bold + colored
 		"bold_black":   "\033[1;30m",
 		"bold_red":     "\033[1;91m",
 		"bold_green":   "\033[1;92m",
@@ -66,6 +83,18 @@ var (
 		"bold_white":   "\033[1;97m",
 		"bold_gray":    "\033[1;90m",
 		"bold_pink":    "\033[1;94m",
+
+		// bg colors
+		"bg_black":   "\033[40m",
+		"bg_red":     "\033[101m",
+		"bg_green":   "\033[102m",
+		"bg_yellow":  "\033[103m",
+		"bg_blue":    "\033[44m",
+		"bg_magenta": "\033[105m",
+		"bg_cyan":    "\033[106m",
+		"bg_white":   "\033[107m",
+		"bg_gray":    "\033[100m",
+		"bg_none":    "",
 	}
 
 	Config          types.Config
@@ -81,12 +110,6 @@ var (
 	Equities        []string
 	Crypto          []string
 )
-
-func ClearScreen() {
-	cmd := exec.Command("clear")
-	cmd.Stdout = os.Stdout
-	cmd.Run()
-}
 
 func init() {
 	fileContent, err := os.ReadFile("config.json")
@@ -106,11 +129,12 @@ func init() {
 
 	width, height, err := term.GetSize(0)
 	if err == nil {
-		ChartBodyCols = uint32(utils.GetClosestNumDivBy(32, width-6))
-		ChartBodyRows = uint32(utils.GetClosestNumDivBy(8, height-10))
+		ChartBodyCols = uint32(utils.GetClosestNumDivBy(12, width-13))
+		// TODO subtract ChartBodyRows by 2 more for the timeframe viewer
+		ChartBodyRows = uint32(utils.GetClosestNumDivBy(8, height-7))
 		NumCandles = ChartBodyCols
-		NumYLabels = uint32(ChartBodyRows / 4)
-		NumXLabels = NumYLabels
+		NumYLabels = uint32(ChartBodyRows / 6)
+		NumXLabels = uint32(ChartBodyCols/12) + 1
 	}
 
 }

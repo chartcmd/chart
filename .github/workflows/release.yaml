@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+  packages: write
+
 jobs:
   create_release:
     runs-on: ubuntu-latest
@@ -18,13 +22,13 @@ jobs:
 
     - name: Build for Mac
       run: |
-        GOOS=darwin GOARCH=amd64 go build -o chart-mac ./cmd
-        chmod +x chart-mac
+        GOOS=darwin GOARCH=amd64 go build -o chart ./cmd
+        chmod +x chart
 
     - name: Build for Linux
       run: |
-        GOOS=linux GOARCH=amd64 go build -o chart-linux ./cmd
-        chmod +x chart-linux
+        GOOS=linux GOARCH=amd64 go build -o chart ./cmd
+        chmod +x chart
 
     - name: Create Mac Installation Script
       run: |

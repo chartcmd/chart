@@ -34,9 +34,11 @@ func fillXAxis(chartView *[][]string, candles []types.Candle) {
 	indices, timestampLabels := getTimestampLabels(timestamps)
 	rowIdx := len(*chartView) - 1
 	for i, idx := range indices {
+		// TODO do we need this if statement
 		if i < len(timestamps) {
 			ts := timestampLabels[i]
 			offset := int(len(ts) / 2)
+			// TODO do -1 to compensate for removing first candle
 			colIdx := idx - offset + int(c.ChartBodyLeftPadding)
 			for j, letter := range ts {
 				(*chartView)[rowIdx][colIdx+j] = utils.Fill(string(letter), c.WhiteColor)

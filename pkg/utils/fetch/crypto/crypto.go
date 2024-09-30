@@ -14,7 +14,7 @@ var (
 	data [][]float64
 )
 
-func GetCoinbase(ticker string, start, end time.Time, granularity uint32) ([][]float64, error) {
+func GetCoinbaseCandlestick(ticker string, start, end time.Time, granularity uint32) ([][]float64, error) {
 	url := fmt.Sprintf(constants.CoinbaseCandleEndpointFullUrl,
 		constants.CoinbaseBaseUrl,
 		fmt.Sprintf(constants.CoinbaseCandleEndpointUrl, ticker),
