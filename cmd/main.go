@@ -5,11 +5,6 @@ import (
 	"os"
 )
 
-var (
-	isJSON   bool
-	isStream bool
-)
-
 func main() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)

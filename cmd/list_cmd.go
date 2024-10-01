@@ -7,6 +7,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var (
+	isJSON   bool
+	isStream bool
+)
+
 var validTickers = []string{"btc", "eth", "aapl", "googl", "msft"} // Add more as needed
 
 var listCmd = &cobra.Command{
