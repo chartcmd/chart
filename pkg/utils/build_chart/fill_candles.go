@@ -39,9 +39,9 @@ func insertCandleBody(chartBody *[][]string, rowIdx int, colIdx int, dist int, i
 
 }
 
-func fillCandles(chartBody *[][]string, candles []types.Candle, max float64, min float64, pricePerYUnit float64) {
+func fillCandles(chartBody *[][]string, candles []types.Candle, max float64, min float64, pricePerYUnit float64, leftOffset int) {
 	for i, candle := range candles {
-		colIdx := i + int(c.ChartBodyLeftPadding)
+		colIdx := i + int(c.ChartBodyLeftPadding) + leftOffset
 
 		sizeOfUpWick := math.Abs(candle.High-math.Max(candle.Open, candle.Close)) / pricePerYUnit
 		if sizeOfUpWick > 0.5 {

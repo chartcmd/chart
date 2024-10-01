@@ -1,7 +1,7 @@
 {
     "default_tf": "1d",
-    "up_color": "purple",
-    "down_color": "white",
+    "up_color": "green",
+    "down_color": "red",
     "equity_wl": [
         "SPY",
         "QQQ",

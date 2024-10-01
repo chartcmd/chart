@@ -26,7 +26,7 @@ func fillYAxis(chartView *[][]string, priceLabels []float64, max float64, min fl
 	}
 }
 
-func fillXAxis(chartView *[][]string, candles []types.Candle) {
+func fillXAxis(chartView *[][]string, candles []types.Candle, leftOffset int) {
 	var timestamps []time.Time
 	for _, candle := range candles {
 		timestamps = append(timestamps, candle.Time)
@@ -39,7 +39,7 @@ func fillXAxis(chartView *[][]string, candles []types.Candle) {
 			ts := timestampLabels[i]
 			offset := int(len(ts) / 2)
 			// TODO do -1 to compensate for removing first candle
-			colIdx := idx - offset + int(c.ChartBodyLeftPadding)
+			colIdx := idx - offset + int(c.ChartBodyLeftPadding) + leftOffset
 			for j, letter := range ts {
 				(*chartView)[rowIdx][colIdx+j] = utils.Fill(string(letter), c.WhiteColor)
 			}

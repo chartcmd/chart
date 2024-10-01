@@ -6,6 +6,10 @@ GOGET=$(GOCMD) get
 BINARY_NAME=chart
 BINARY_UNIX=$(BINARY_NAME)
 
+init:
+	sudo mkdir ~/.$(BINARY_NAME)
+	sudo touch ~/.$(BINARY_NAME)/config.json
+
 build:
 	$(GOBUILD) -o out/bin/$(BINARY_NAME) -v ./cmd
 
@@ -19,6 +23,9 @@ clean:
 	$(GOCLEAN)
 	rm -f out/bin/$(BINARY_NAME)
 	rm -f out/bin/$(BINARY_UNIX)
+
+reset:
+	sudo rm -rf ~/.$(BINARY_NAME)
 
 run:
 	$(GOBUILD) -o out/bin/$(BINARY_NAME) -v ./cmd

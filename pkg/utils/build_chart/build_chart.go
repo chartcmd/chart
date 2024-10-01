@@ -6,6 +6,8 @@ import (
 )
 
 func BuildChart(candles []types.Candle) string {
+	leftOffset := int(c.ChartBodyCols) - len(candles)
+	// leftOffset := 0
 	priceLabels := getRoundPriceLabels(candles)
 	rightPadding := maxLengthOfLabel(priceLabels) + 2
 
@@ -14,11 +16,11 @@ func BuildChart(candles []types.Candle) string {
 	pricePerYUnit := getPricePerYUnit(topPriceLabel, bottomPriceLabel)
 
 	chartBody := initChartBody()
-	fillCandles(&chartBody, candles, topPriceLabel, bottomPriceLabel, pricePerYUnit)
+	fillCandles(&chartBody, candles, topPriceLabel, bottomPriceLabel, pricePerYUnit, leftOffset)
 
 	chartView := initChartView(chartBody, rightPadding)
 	fillYAxis(&chartView, priceLabels, topPriceLabel, bottomPriceLabel)
-	fillXAxis(&chartView, candles)
+	fillXAxis(&chartView, candles, leftOffset)
 
 	return matrixToString(chartView)
 }
