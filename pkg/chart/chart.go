@@ -79,10 +79,6 @@ func drawChartStream(ticker, interval string) error {
 			candles = newCandles
 
 			nextCandleTimer.Reset(time.Duration(granularity) * time.Second)
-
-			// chart := build_chart.BuildChart(candles)
-			// pctChange := ((candles[len(candles)-1].Close - candles[0].Open) / candles[0].Open) * 100
-			// display(ticker, latestPrice, chart, pctChange)
 		}
 	}
 }

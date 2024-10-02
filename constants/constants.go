@@ -13,6 +13,7 @@ import (
 )
 
 var (
+	// TODO move to chart and make a type
 	ChartBodyCols          uint32 = 128
 	ChartBodyRows          uint32 = 32
 	ChartTopPadding        uint32 = 1
@@ -129,6 +130,7 @@ func init() {
 		Crypto = Config.CryptoWatchlist
 	}
 
+	// TODO make this refresh in display
 	width, height, err := term.GetSize(0)
 	if err == nil {
 		ChartBodyCols = uint32(utils.GetClosestNumDivBy(2, width-15))

@@ -8,14 +8,7 @@ import (
 )
 
 /**
-chart -> help
-chart ticker interval -> base cmd
-chart ticker interval -s -> stream base cmd
-chart crypto|stocks -> 4 charts
-chart crypto|stocks -s -> 4 charts
-
-
-
+stream should be default
 */
 
 var rootCmd = &cobra.Command{

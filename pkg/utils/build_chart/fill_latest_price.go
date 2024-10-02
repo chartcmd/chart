@@ -16,7 +16,7 @@ func fillLatestPriceLine(chartView *[][]string, candles []types.Candle, max floa
 		color = c.DownColorBold
 	}
 
-	colIdx := numCandles + 1
+	colIdx := int(c.ChartBodyCols) + 1
 	rowIdx := getChartBodyYIdx(candle.Close, max, min) + 1
 
 	for i := range int(c.ChartBodyLeftPadding) + int(c.ChartBodyRightPadding) - 2 {
