@@ -28,7 +28,11 @@ func fillLatestPriceLine(chartView *[][]string, candles []types.Candle, max floa
 	} else {
 		color = c.DownColorBg
 	}
-	labelStr := float64ToStr(candle.Close)[:maxPriceLabel-2]
+	sliceAmount := maxPriceLabel - 2
+	var labelStr string = float64ToStr(candle.Close)
+	if len(labelStr) >= sliceAmount {
+		labelStr = labelStr[:sliceAmount]
+	}
 	priceColIdx := int(c.ChartBodyLeftPadding) + int(c.ChartBodyRightPadding) + 1
 	for i, letter := range labelStr {
 		(*chartView)[rowIdx][colIdx+i+priceColIdx] = utils.Fill(string(letter), color)

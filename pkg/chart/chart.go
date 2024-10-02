@@ -73,16 +73,16 @@ func drawChartStream(ticker, interval string) error {
 			if err != nil {
 				return fmt.Errorf("error: refetching candles: %v", err)
 			}
-			candles = newCandles
 
-			curCandle := initCurCandle(candles[len(candles)-1].Close, candles[len(candles)-1])
-			candles = append(candles[1:], curCandle)
+			curCandle = initCurCandle(newCandles[len(newCandles)-1].Close, newCandles[len(newCandles)-1])
+			newCandles = append(newCandles[1:], curCandle)
+			candles = newCandles
 
 			nextCandleTimer.Reset(time.Duration(granularity) * time.Second)
 
-			chart := build_chart.BuildChart(candles)
-			pctChange := ((candles[len(candles)-1].Close - candles[0].Open) / candles[0].Open) * 100
-			display(ticker, latestPrice, chart, pctChange)
+			// chart := build_chart.BuildChart(candles)
+			// pctChange := ((candles[len(candles)-1].Close - candles[0].Open) / candles[0].Open) * 100
+			// display(ticker, latestPrice, chart, pctChange)
 		}
 	}
 }
