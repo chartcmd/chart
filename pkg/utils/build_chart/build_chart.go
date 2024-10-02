@@ -7,7 +7,6 @@ import (
 
 func BuildChart(candles []types.Candle) string {
 	leftOffset := int(c.ChartBodyCols) - len(candles)
-	// leftOffset := 0
 	priceLabels := getRoundPriceLabels(candles)
 	rightPadding := maxLengthOfLabel(priceLabels) + 2
 
@@ -21,6 +20,7 @@ func BuildChart(candles []types.Candle) string {
 	chartView := initChartView(chartBody, rightPadding)
 	fillYAxis(&chartView, priceLabels, topPriceLabel, bottomPriceLabel)
 	fillXAxis(&chartView, candles, leftOffset)
+	fillLatestPriceLine(&chartView, candles, topPriceLabel, bottomPriceLabel, rightPadding)
 
 	return matrixToString(chartView)
 }

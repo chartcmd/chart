@@ -7,15 +7,12 @@ import (
 	"time"
 
 	"github.com/chartcmd/chart/pkg/utils"
+	"github.com/chartcmd/chart/pkg/utils/fetch/crypto"
 	"github.com/chartcmd/chart/types"
 	"golang.org/x/term"
 )
 
 var (
-	CoinbaseBaseUrl               = "https://api.exchange.coinbase.com"
-	CoinbaseCandleEndpointUrl     = "/products/%s/candles"
-	CoinbaseCandleEndpointFullUrl = "%s%s?start=%s&end=%s&granularity=%d"
-
 	ChartBodyCols          uint32 = 128
 	ChartBodyRows          uint32 = 32
 	ChartTopPadding        uint32 = 1
@@ -29,17 +26,20 @@ var (
 	NumXLabels             uint32 = NumYLabels
 	NumCandles             uint32 = 128
 
-	CandleBody string = "┃"
-	WickBody   string = "│"
-	WickTop    string = "╽"
-	WickBottom string = "╿"
-	YAxis      string = "|"
-	XAxis      string = "-"
+	CandleBody  string = "┃"
+	WickBody    string = "│"
+	WickTop     string = "╽"
+	WickBottom  string = "╿"
+	YAxis       string = "|"
+	XAxis       string = "-"
+	LatestPrice string = "▁"
 
 	// TODO: add time difference from UTC (-(time.Local.Sub(time.UTC)).Hours())
 	CoinbaseCandleMax   uint32        = 300
 	TimeDiffUTC         time.Duration = 0
-	StreamRefreshRateMS uint32        = 500
+	StreamRefreshRateMS int           = 255
+
+	CryptoList []string = crypto.GetCryptoList()
 
 	Intervals []string = []string{
 		"1m",
@@ -102,6 +102,8 @@ var (
 	UpColorBold     string = ColorToAnsi["bold_green"]
 	DownColor       string = ColorToAnsi["red"]
 	DownColorBold   string = ColorToAnsi["bold_red"]
+	UpColorBg       string = ColorToAnsi["bg_green"]
+	DownColorBg     string = ColorToAnsi["bg_red"]
 	WhiteColor      string = ColorToAnsi["white"]
 	WhiteColorBold  string = ColorToAnsi["bold_white"]
 	ResetColor      string = "\033[0m"
@@ -112,7 +114,7 @@ var (
 )
 
 func init() {
-	fileContent, err := os.ReadFile("config.json")
+	fileContent, err := os.ReadFile("~/.chart/config.json")
 	if err != nil {
 		fmt.Println("Error reading config file:", err)
 	} else {
@@ -131,7 +133,7 @@ func init() {
 	if err == nil {
 		ChartBodyCols = uint32(utils.GetClosestNumDivBy(2, width-15))
 		// TODO subtract ChartBodyRows by 2 more for the timeframe viewer
-		ChartBodyRows = uint32(utils.GetClosestNumDivBy(4, height-7))
+		ChartBodyRows = uint32(utils.GetClosestNumDivBy(4, height-7)) - 3
 		NumCandles = ChartBodyCols
 		NumYLabels = uint32(ChartBodyRows / 6)
 		NumXLabels = uint32(ChartBodyCols/12) + 1

@@ -41,7 +41,7 @@ jobs:
     - name: Create Linux Installation Script
       run: |
         echo '#!/bin/bash
-        sudo mv chart-linux /usr/local/bin/chart
+        sudo mv char /usr/local/bin/chart
         sudo chmod +x /usr/local/bin/chart
         echo "Installation complete. You can now use the '"'"'chart'"'"' command."' > install-linux.sh
         chmod +x install-linux.sh

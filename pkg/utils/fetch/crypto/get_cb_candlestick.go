@@ -6,8 +6,6 @@ import (
 	"io"
 	"net/http"
 	"time"
-
-	"github.com/chartcmd/chart/constants"
 )
 
 var (
@@ -15,9 +13,10 @@ var (
 )
 
 func GetCoinbaseCandlestick(ticker string, start, end time.Time, granularity uint32) ([][]float64, error) {
-	url := fmt.Sprintf(constants.CoinbaseCandleEndpointFullUrl,
-		constants.CoinbaseBaseUrl,
-		fmt.Sprintf(constants.CoinbaseCandleEndpointUrl, ticker),
+	url := fmt.Sprintf(
+		CoinbaseCandleEndpointF,
+		CoinbaseBaseUrl1,
+		fmt.Sprintf(CoinbaseCandleEndpointUrl, ticker),
 		start.Format(time.RFC3339),
 		end.Format(time.RFC3339),
 		granularity,

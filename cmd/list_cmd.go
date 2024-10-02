@@ -7,11 +7,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-	isJSON   bool
-	isStream bool
-)
-
 var validTickers = []string{"btc", "eth", "aapl", "googl", "msft"} // Add more as needed
 
 var listCmd = &cobra.Command{
@@ -80,14 +75,14 @@ func init() {
 	listCmd.AddCommand(listCryptoCmd)
 
 	listCmd.PersistentFlags().BoolVar(&isJSON, "json", false, "Output in JSON format")
-	listCmd.Flags().BoolVar(&isStream, "stream", false, "Stream data")
+	listCmd.Flags().BoolVarP(&isStream, "stream", "s", false, "Stream data")
 
 	listCmd.SetHelpFunc(func(cmd *cobra.Command, args []string) {
 		fmt.Println("Usage:")
 		fmt.Println("  chart list [stocks|crypto] [flags]")
 		fmt.Println("\nFlags:")
 		fmt.Println("  --json       Output in JSON format")
-		fmt.Println("  --stream     Stream data (for main list command only)")
+		fmt.Println("  -s, --stream Stream data (for main list command only)")
 		fmt.Println("\nAvailable Commands:")
 		fmt.Println("  stocks      List available stock charts")
 		fmt.Println("  crypto      List available crypto charts")

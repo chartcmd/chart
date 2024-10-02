@@ -3,6 +3,7 @@ package utils
 import (
 	"os"
 	"os/exec"
+	"strings"
 )
 
 func GetClosestNumDivBy(num, threshold int) int {
@@ -24,4 +25,16 @@ func ClearScreen() {
 	cmd := exec.Command("clear")
 	cmd.Stdout = os.Stdout
 	cmd.Run()
+}
+
+func StrSliceContains(slice []string, val string, caseSensitive bool) bool {
+	for _, str := range slice {
+		if val == str {
+			return true
+		}
+		if !caseSensitive && strings.EqualFold(val, str) {
+			return true
+		}
+	}
+	return false
 }
