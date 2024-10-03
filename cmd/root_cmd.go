@@ -25,7 +25,6 @@ var rootCmd = &cobra.Command{
 }
 
 func handleChartCommand(cmd *cobra.Command, args []string) error {
-	fmt.Println(args)
 	if len(args) == 0 {
 		cmd.Help()
 	} else if len(args) == 1 {

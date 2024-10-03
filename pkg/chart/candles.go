@@ -39,7 +39,7 @@ func initCurCandle(latestPrice float64, lastCandle types.Candle) types.Candle {
 	}
 }
 
-func parseCandleSticks(candles [][]float64) []types.Candle {
+func parseCoinbaseCandleSticks(candles [][]float64) []types.Candle {
 	var result []types.Candle
 	var numCandles = len(candles)
 	for i := range candles {
