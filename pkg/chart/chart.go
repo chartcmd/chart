@@ -7,13 +7,11 @@ import (
 
 	c "github.com/chartcmd/chart/constants"
 	"github.com/chartcmd/chart/pkg/utils/build_chart"
-	"github.com/chartcmd/chart/pkg/utils/fetch/crypto"
 )
 
 func DrawChart(ticker, interval string, stream bool) error {
 	if stream {
 		return drawChartStream(ticker, interval)
-
 	}
 	return drawChart(ticker, interval)
 }
@@ -29,7 +27,7 @@ func drawChartStream(ticker, interval string) error {
 		return fmt.Errorf("error: use a smaller resolution to stream")
 	}
 
-	latestPrice, err := crypto.GetCoinbaseLatest(ticker + "-USD")
+	latestPrice, err := GetLatest(ticker)
 	if err != nil {
 		return fmt.Errorf("error fetching latest price: %s", err)
 	}
@@ -55,7 +53,7 @@ func drawChartStream(ticker, interval string) error {
 	for {
 		select {
 		case <-refreshTicker.C:
-			latestPrice, err := crypto.GetCoinbaseLatest(ticker + "-USD")
+			latestPrice, err := GetLatest(ticker)
 			if err != nil {
 				log.Printf("Error getting latest price: %v", err)
 				continue
@@ -89,7 +87,7 @@ func drawChart(ticker, interval string) error {
 		return err
 	}
 
-	latestPrice, err := crypto.GetCoinbaseLatest(ticker + "-USD")
+	latestPrice, err := GetLatest(ticker)
 	if err == nil {
 		curCandle := initCurCandle(latestPrice, candles[len(candles)-1])
 		candles = append(candles, curCandle)[1:]

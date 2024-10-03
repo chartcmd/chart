@@ -3,13 +3,29 @@ package chart
 import (
 	"fmt"
 	"math"
+	"strings"
 	"time"
 
 	c "github.com/chartcmd/chart/constants"
 	"github.com/chartcmd/chart/pkg/utils"
 	"github.com/chartcmd/chart/pkg/utils/fetch/crypto"
+	"github.com/chartcmd/chart/pkg/utils/fetch/stocks"
 	"github.com/chartcmd/chart/types"
 )
+
+func getCandles(ticker, interval string) ([]types.Candle, error) {
+	granularity := c.IntervalToGranularity[interval]
+	if utils.StrSliceContains(c.CryptoList, ticker, false) {
+		return getCryptoCandles(ticker, granularity)
+	} else if stocks.IsValidTicker(ticker) {
+		if strings.ToUpper(interval) != "1D" {
+			return nil, fmt.Errorf("error: only 1d interval available for stocks")
+		}
+		return getStockCandles(ticker, interval)
+	}
+
+	return nil, fmt.Errorf("unknown error in getCandles")
+}
 
 func getCryptoCandles(ticker string, granularity uint32) ([]types.Candle, error) {
 	end := time.Now()
@@ -21,7 +37,7 @@ func getCryptoCandles(ticker string, granularity uint32) ([]types.Candle, error)
 		if err != nil {
 			return nil, err
 		}
-		return parseCandleSticks(data), nil
+		return parseCoinbaseCandleSticks(data), nil
 	} else {
 		var candles []types.Candle
 		remainingCandles := c.NumCandles
@@ -39,7 +55,7 @@ func getCryptoCandles(ticker string, granularity uint32) ([]types.Candle, error)
 			if err != nil {
 				return nil, err
 			}
-			candles = append(candles, parseCandleSticks(data)...)
+			candles = append(candles, parseCoinbaseCandleSticks(data)...)
 
 			remainingCandles -= batchSize
 			currentStart = batchEnd
@@ -49,11 +65,6 @@ func getCryptoCandles(ticker string, granularity uint32) ([]types.Candle, error)
 	}
 }
 
-func getCandles(ticker, interval string) ([]types.Candle, error) {
-	granularity := c.IntervalToGranularity[interval]
-	if utils.StrSliceContains(c.CryptoList, ticker, false) {
-		return getCryptoCandles(ticker, granularity)
-	}
-
-	return nil, fmt.Errorf("unknown error in getCandles")
+func getStockCandles(ticker, interval string) ([]types.Candle, error) {
+	return stocks.GetYFCandleStick(ticker, interval)
 }

@@ -39,6 +39,7 @@ var (
 	StreamRefreshRateMS int = 255
 
 	CryptoList []string = crypto.GetCryptoList()
+	StockList  []string = []string{}
 
 	Intervals []string = []string{
 		"1m",
