@@ -1,13 +1,13 @@
 package build_chart
 
 import (
-	"fmt"
 	"math"
 	"strconv"
 	"strings"
 	"time"
 
 	c "github.com/chartcmd/chart/constants"
+	ts "github.com/chartcmd/chart/pkg/utils/build_chart/timestamps"
 	"github.com/chartcmd/chart/types"
 )
 
@@ -53,127 +53,27 @@ func getPricePerYUnit(max float64, min float64) float64 {
 	return (max - min) / float64(c.ChartBodyRows)
 }
 
-func formatTimestamp(ts time.Time) string {
-	if ts.Minute() != 0 {
-		return fmt.Sprintf("%02d:%02d", ts.Hour(), ts.Minute())
-	}
-	if ts.Hour() != 0 {
-		return fmt.Sprintf("%02d:00", ts.Hour())
-	}
-	if ts.Day() == 1 {
-		return ts.Format("Jan")
-	}
-	if ts.Month() == 1 {
-		return strconv.Itoa(ts.Year())
-	}
-	return strconv.Itoa(ts.Day())
-}
-
-// TODO: hardcode based on granularity
 func getTimestampLabels(timestamps []time.Time) ([]int, []string) {
 	if len(timestamps) == 0 {
 		return nil, nil
 	}
-
-	roundestIndex, _ := findRoundestTimestamp(timestamps)
-	windowSize := (len(timestamps) / 8) - 1
-	if windowSize < 1 {
-		windowSize = 1
+	granularity := int64(timestamps[1].Sub(timestamps[0]).Seconds())
+	if granularity == int64(c.IntervalToGranularity["1m"]) {
+		return ts.Get15mTimestampLabels(timestamps)
+	} else if granularity == int64(c.IntervalToGranularity["5m"]) {
+		return ts.Get1hTimestampLabels(timestamps)
+	} else if granularity == int64(c.IntervalToGranularity["15m"]) {
+		return ts.Get4hTimestampLabels(timestamps)
+	} else if granularity == int64(c.IntervalToGranularity["1h"]) {
+		return ts.Get1dTimestampLabels(timestamps)
+	} else if granularity == int64(c.IntervalToGranularity["6h"]) {
+		return ts.Get1wTimestampLabels(timestamps)
+	} else if granularity == int64(c.IntervalToGranularity["1d"]) {
+		return ts.Get1mTimestampLabels(timestamps)
 	}
-	startIndexInWindow := roundestIndex % windowSize
-
-	var labels []string
-	var indices []int
-	for i := 0; i < 8; i++ {
-		index := startIndexInWindow + (i * windowSize)
-		if index < len(timestamps) {
-			indices = append(indices, index)
-			labels = append(labels, formatTimestamp(timestamps[index]))
-		}
-	}
-
-	return indices, labels
+	return []int{}, []string{}
 }
 
-func findRoundestTimestamp(timestamps []time.Time) (int, time.Time) {
-	roundestIndex := 0
-	minScore := math.MaxInt32
-
-	for i, ts := range timestamps {
-		score := getRoundnessTimestampScore(ts)
-		if score < minScore {
-			minScore = score
-			roundestIndex = i
-		}
-	}
-
-	return roundestIndex, timestamps[roundestIndex]
-}
-
-// TODO: how else to do this
-func getRoundnessTimestampScore(ts time.Time) int {
-	year := ts.Year()
-	month := ts.Month()
-	day := ts.Day()
-	hour := ts.Hour()
-	minute := ts.Minute()
-
-	isStartOfDay := hour*minute == 0
-	isStartOfMonth := day+(hour*minute) == 1
-
-	if year%100 == 0 && month == 1 && isStartOfMonth {
-		return 1
-	}
-	if year%50 == 0 && month == 1 && isStartOfMonth {
-		return 2
-	}
-	if year%10 == 0 && month == 1 && isStartOfMonth {
-		return 3
-	}
-	if year%5 == 0 && month == 1 && isStartOfMonth {
-		return 4
-	}
-	if month == 1 && isStartOfMonth {
-		return 5
-	}
-	if (month == 1 || month == 4 || month == 7 || month == 10) && isStartOfMonth {
-		return 6
-	}
-	if isStartOfMonth {
-		return 7
-	}
-	if day == 15 && isStartOfDay {
-		return 8
-	}
-	if day%3 == 1 && isStartOfDay {
-		return 9
-	}
-	if isStartOfDay {
-		return 10
-	}
-	if hour%12 == 0 && minute == 0 {
-		return 11
-	}
-	if hour%6 == 0 && minute == 0 {
-		return 12
-	}
-	if hour%3 == 0 && minute == 0 {
-		return 13
-	}
-	if minute == 0 {
-		return 14
-	}
-	if minute%30 == 0 {
-		return 15
-	}
-	if minute%15 == 0 {
-		return 16
-	}
-
-	return 17
-}
-
-// TODO fix so it doesn't get labels below first label < min
 func getRoundPriceLabels(candles []types.Candle) []float64 {
 	max := getMaxPrice(candles)
 	min := getMinPrice(candles)

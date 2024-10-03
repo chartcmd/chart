@@ -4,7 +4,6 @@ import (
 	"math"
 	"time"
 
-	c "github.com/chartcmd/chart/constants"
 	"github.com/chartcmd/chart/types"
 )
 
@@ -46,7 +45,7 @@ func parseCandleSticks(candles [][]float64) []types.Candle {
 	for i := range candles {
 		candle := candles[numCandles-1-i]
 		result = append(result, types.Candle{
-			Time:    time.Unix(int64(candle[0]), 0).Add(c.TimeDiffUTC * time.Hour),
+			Time:    time.Unix(int64(candle[0]), 0),
 			Low:     candle[1],
 			High:    candle[2],
 			Open:    candle[3],

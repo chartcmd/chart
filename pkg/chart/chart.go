@@ -20,13 +20,13 @@ func DrawChart(ticker, interval string, stream bool) error {
 
 func drawChartStream(ticker, interval string) error {
 	granularity := c.IntervalToGranularity[interval]
-	if granularity > 3600 {
-		return fmt.Errorf("error: please use a smaller timeframe to stream [1m, 5m, 15m, 1h]")
-	}
 
 	candles, err := getCandles(ticker, interval)
 	if err != nil {
 		return fmt.Errorf("error: getting initial candles: %v", err)
+	}
+	if len(candles) > int(c.CoinbaseCandleMax) {
+		return fmt.Errorf("error: use a smaller resolution to stream")
 	}
 
 	latestPrice, err := crypto.GetCoinbaseLatest(ticker + "-USD")
