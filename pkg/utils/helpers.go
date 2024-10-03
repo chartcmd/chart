@@ -1,9 +1,11 @@
 package utils
 
 import (
+	"math"
 	"os"
 	"os/exec"
 	"strings"
+	"time"
 )
 
 func GetClosestNumDivBy(num, threshold int) int {
@@ -37,4 +39,12 @@ func StrSliceContains(slice []string, val string, caseSensitive bool) bool {
 		}
 	}
 	return false
+}
+
+func GetUTCOffsetHours() int {
+	now := time.Now()
+	_, offset := now.Zone()
+
+	hours := float64(offset) / 3600.0
+	return int(math.Round(hours*100) / 100)
 }

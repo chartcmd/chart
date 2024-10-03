@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"time"
 
 	"github.com/chartcmd/chart/pkg/utils"
 	"github.com/chartcmd/chart/pkg/utils/fetch/crypto"
@@ -35,10 +34,9 @@ var (
 	XAxis       string = "-"
 	LatestPrice string = "▁"
 
-	// TODO: add time difference from UTC (-(time.Local.Sub(time.UTC)).Hours())
-	CoinbaseCandleMax   uint32        = 300
-	TimeDiffUTC         time.Duration = 0
-	StreamRefreshRateMS int           = 255
+	CoinbaseCandleMax uint32 = 300
+
+	StreamRefreshRateMS int = 255
 
 	CryptoList []string = crypto.GetCryptoList()
 
