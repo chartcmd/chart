@@ -25,6 +25,7 @@ var (
 	NumYLabels             uint32 = uint32(ChartBodyRows / 4)
 	NumXLabels             uint32 = NumYLabels
 	NumCandles             uint32 = 128
+	IntervalBarPadding     uint32 = 2
 
 	CandleBody  string = "┃"
 	WickBody    string = "│"
@@ -97,20 +98,24 @@ var (
 		"bg_none":    "",
 	}
 
-	Config          types.Config
-	UpColor         string = ColorToAnsi["green"]
-	UpColorBold     string = ColorToAnsi["bold_green"]
-	DownColor       string = ColorToAnsi["red"]
-	DownColorBold   string = ColorToAnsi["bold_red"]
-	UpColorBg       string = ColorToAnsi["bg_green"]
-	DownColorBg     string = ColorToAnsi["bg_red"]
-	WhiteColor      string = ColorToAnsi["white"]
-	WhiteColorBold  string = ColorToAnsi["bold_white"]
-	ResetColor      string = "\033[0m"
-	SelectedColor   string = WhiteColor
-	UnselectedColor string = ColorToAnsi["gray"]
-	Equities        []string
-	Crypto          []string
+	Config              types.Config
+	UpColor             string = ColorToAnsi["green"]
+	UpColorBold         string = ColorToAnsi["bold_green"]
+	DownColor           string = ColorToAnsi["red"]
+	DownColorBold       string = ColorToAnsi["bold_red"]
+	UpColorBg           string = ColorToAnsi["bg_green"]
+	DownColorBg         string = ColorToAnsi["bg_red"]
+	CyanBg              string = ColorToAnsi["bg_cyan"]
+	GrayBg              string = ColorToAnsi["bi_gray"]
+	WhiteColor          string = ColorToAnsi["white"]
+	WhiteColorBold      string = ColorToAnsi["bold_white"]
+	SelectedColorBold   string = ColorToAnsi["bold_cyan"]
+	UnselectedColorBold string = ColorToAnsi["bold_gray"]
+	ResetColor          string = "\033[0m"
+	SelectedColor       string = WhiteColor
+	UnselectedColor     string = ColorToAnsi["gray"]
+	Equities            []string
+	Crypto              []string
 )
 
 func init() {

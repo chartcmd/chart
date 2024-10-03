@@ -6,6 +6,8 @@ import (
 	"os/exec"
 	"strings"
 	"time"
+
+	"github.com/nsf/termbox-go"
 )
 
 func GetClosestNumDivBy(num, threshold int) int {
@@ -47,4 +49,43 @@ func GetUTCOffsetHours() int {
 
 	hours := float64(offset) / 3600.0
 	return int(math.Round(hours*100) / 100)
+}
+
+func GetArrowKeyInput() (int, int) {
+	err := termbox.Init()
+	if err != nil {
+		panic(err)
+	}
+	defer termbox.Close()
+
+	termbox.SetInputMode(termbox.InputEsc)
+
+	for {
+		switch ev := termbox.PollEvent(); ev.Type {
+		case termbox.EventKey:
+			switch ev.Key {
+			case termbox.KeyArrowLeft:
+				return -1, 0
+			case termbox.KeyArrowRight:
+				return 1, 0
+			case termbox.KeyArrowUp:
+				return 0, 1
+			case termbox.KeyArrowDown:
+				return 0, -1
+			case termbox.KeyEsc:
+				os.Exit(1)
+			}
+		case termbox.EventError:
+			panic(ev.Err)
+		}
+	}
+}
+
+func IndexOf(slice []string, element string) int {
+	for i, elem := range slice {
+		if elem == element {
+			return i
+		}
+	}
+	return -1
 }
