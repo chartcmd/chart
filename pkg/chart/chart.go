@@ -3,20 +3,39 @@ package chart
 import (
 	"fmt"
 	"log"
+	"math"
 	"time"
 
 	c "github.com/chartcmd/chart/constants"
+	utils "github.com/chartcmd/chart/pkg/utils"
 	"github.com/chartcmd/chart/pkg/utils/build_chart"
 )
 
-func DrawChart(ticker, interval string, stream bool) error {
-	if stream {
-		return drawChartStream(ticker, interval)
-	}
-	return drawChart(ticker, interval)
+type InputData struct {
+	X int
+	Y int
 }
 
-func drawChartStream(ticker, interval string) error {
+func DrawChart(ticker, interval string, stream bool) error {
+	intervalIdx := utils.IndexOf(c.Intervals, interval)
+
+	if stream {
+		err := drawChartStream(ticker, intervalIdx)
+		if err != nil {
+			return err
+		}
+	}
+
+	err := drawChart(ticker, intervalIdx)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func drawChartStream(ticker string, intervalIdx int) error {
+	numIntervals := len(c.Intervals)
+	interval := c.Intervals[intervalIdx]
 	granularity := c.IntervalToGranularity[interval]
 
 	candles, err := getCandles(ticker, interval)
@@ -26,6 +45,15 @@ func drawChartStream(ticker, interval string) error {
 	if len(candles) > int(c.CoinbaseCandleMax) {
 		return fmt.Errorf("error: use a smaller resolution to stream")
 	}
+
+	inputChan := make(chan InputData)
+
+	go func() {
+		for {
+			x, y := utils.GetArrowKeyInput()
+			inputChan <- InputData{X: x, Y: y}
+		}
+	}()
 
 	latestPrice, err := GetLatest(ticker)
 	if err != nil {
@@ -64,7 +92,7 @@ func drawChartStream(ticker, interval string) error {
 
 			chart := build_chart.BuildChart(candles)
 			pctChange := ((candles[len(candles)-1].Close - candles[0].Open) / candles[0].Open) * 100
-			display(ticker, latestPrice, chart, pctChange)
+			display(ticker, latestPrice, chart, pctChange, intervalIdx)
 
 		case <-nextCandleTimer.C:
 			newCandles, err := getCandles(ticker, interval)
@@ -77,11 +105,33 @@ func drawChartStream(ticker, interval string) error {
 			candles = newCandles
 
 			nextCandleTimer.Reset(time.Duration(granularity) * time.Second)
+
+		case input := <-inputChan:
+			if input.X == 1 {
+				intervalIdx = int(math.Min(float64(numIntervals-1), float64(intervalIdx+1)))
+			} else if input.X == -1 {
+				intervalIdx = int(math.Max(0, float64(intervalIdx-1)))
+			}
+
+			if input.X != 0 {
+				interval = c.Intervals[intervalIdx]
+				newCandles, err := getCandles(ticker, interval)
+				if err != nil {
+					log.Printf("Error getting candles for new interval: %v", err)
+					continue
+				}
+				candles = newCandles
+				granularity = c.IntervalToGranularity[interval]
+
+				nextCandleTime = candles[len(candles)-1].Time.Add(time.Duration(granularity) * time.Second)
+				nextCandleTimer.Reset(time.Until(nextCandleTime))
+			}
 		}
 	}
 }
 
-func drawChart(ticker, interval string) error {
+func drawChart(ticker string, intervalIdx int) error {
+	interval := c.Intervals[intervalIdx]
 	candles, err := getCandles(ticker, interval)
 	if err != nil {
 		return err
@@ -98,6 +148,6 @@ func drawChart(ticker, interval string) error {
 	pctChange := ((candles[len(candles)-1].Close - candles[0].Open) / candles[0].Open) * 100
 
 	chart := build_chart.BuildChart(candles)
-	display(ticker, latestPrice, chart, pctChange)
+	display(ticker, latestPrice, chart, pctChange, intervalIdx)
 	return nil
 }

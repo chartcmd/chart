@@ -9,7 +9,7 @@ import (
 	"github.com/chartcmd/chart/pkg/utils"
 )
 
-func display(ticker string, latestPrice float64, chart string, pctChange float64) {
+func display(ticker string, latestPrice float64, chart string, pctChange float64, intervalIdx int) {
 	utils.ClearScreen()
 	now := time.Now()
 	timeString := now.Format("15:04:05")
@@ -31,10 +31,5 @@ func display(ticker string, latestPrice float64, chart string, pctChange float64
 	}
 
 	fmt.Println(chart + c.ResetColor)
-	fmt.Println()
-
-	// TODO
-	// should be 2 lines below bottom of chart
-	// display timeframe bar and highlight selected interval (underlin and bolde it or sum, gray the other ones)
-
+	DisplayIntervalBar(intervalIdx)
 }
