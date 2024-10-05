@@ -35,7 +35,7 @@ var (
 
 	CoinbaseCandleMax uint32 = 300
 
-	StreamRefreshRateMS int = 255
+	StreamRefreshRateMS int = 501
 
 	CryptoList []string = crypto.GetCryptoList()
 	StockList  []string = []string{}

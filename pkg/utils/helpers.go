@@ -163,3 +163,13 @@ func WriteConfig(config types.Config) error {
 
 	return nil
 }
+
+func IsBrightColor(color string) bool {
+	brightColors := []string{"\033[107m", "\033[102m", "\033[103m", "\033[106m"}
+	for _, brightColor := range brightColors {
+		if color == brightColor {
+			return true
+		}
+	}
+	return false
+}

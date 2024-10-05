@@ -25,6 +25,7 @@ type InputData struct {
 }
 
 func DrawChart(ticker, interval string, isStill bool) error {
+	// chartConfig := createChartConfig(ticker, interval)
 	intervalIdx := utils.IndexOf(c.Intervals, interval)
 
 	if isStill {

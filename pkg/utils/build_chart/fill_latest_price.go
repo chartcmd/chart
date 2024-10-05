@@ -19,7 +19,7 @@ func fillLatestPriceLine(chartView *[][]string, candles []types.Candle, max floa
 		color = c.DownColorBold
 		bgColor = c.DownColorBg
 	}
-	if color == c.ColorToAnsi["bold_white"] {
+	if utils.IsBrightColor(bgColor) {
 		textColor = c.ColorToAnsi["bold_black"]
 	} else {
 		textColor = c.ColorToAnsi["bold_white"]
