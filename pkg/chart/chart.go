@@ -62,7 +62,7 @@ func drawChartStream(ticker string, intervalIdx int) error {
 	if err != nil {
 		return fmt.Errorf("error: getting initial candles: %v", err)
 	}
-	if len(candles) > int(c.CoinbaseCandleMax) {
+	if len(candles) > int(c.CoinbaseCandleMax)*2 {
 		return fmt.Errorf("error: use a smaller resolution to stream")
 	}
 
