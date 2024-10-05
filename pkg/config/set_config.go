@@ -12,9 +12,17 @@ func SetConfig(key, value string) error {
 
 	switch key {
 	case "up_color":
-		config.UpColor = value
+		if _, exists := c.ColorToAnsi[value]; exists {
+			config.UpColor = value
+		} else {
+			return fmt.Errorf("invalid color: %s", value)
+		}
 	case "down_color":
-		config.DownColor = value
+		if _, exists := c.ColorToAnsi[value]; exists {
+			config.DownColor = value
+		} else {
+			return fmt.Errorf("invalid color: %s", value)
+		}
 	case "default_tf":
 		if utils.StrSliceContains(c.Intervals, value, false) {
 			config.DefaultTimeFrame = value
