@@ -16,20 +16,21 @@ type InputData struct {
 	Y int
 }
 
-func DrawChart(ticker, interval string, stream bool) error {
+func DrawChart(ticker, interval string, isStill bool) error {
 	intervalIdx := utils.IndexOf(c.Intervals, interval)
 
-	if stream {
+	if isStill {
+		err := drawChart(ticker, intervalIdx)
+		if err != nil {
+			return err
+		}
+	} else {
 		err := drawChartStream(ticker, intervalIdx)
 		if err != nil {
 			return err
 		}
 	}
 
-	err := drawChart(ticker, intervalIdx)
-	if err != nil {
-		return err
-	}
 	return nil
 }
 

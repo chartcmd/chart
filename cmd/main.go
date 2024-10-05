@@ -6,8 +6,8 @@ import (
 )
 
 var (
-	isJSON   bool
-	isStream bool
+	isJSON  bool
+	isStill bool
 )
 
 func main() {

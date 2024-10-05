@@ -20,7 +20,7 @@ var listCmd = &cobra.Command{
 		if isJSON {
 			jsonData, _ := json.MarshalIndent(data, "", "  ")
 			fmt.Println(string(jsonData))
-		} else if isStream {
+		} else if isStill {
 			fmt.Println("Streaming data...")
 			for i := 0; i < 5; i++ {
 				fmt.Printf("Data point %d: %v\n", i+1, validTickers)
@@ -83,7 +83,7 @@ func init() {
 	listCmd.AddCommand(listHelpCmd)
 
 	listCmd.PersistentFlags().BoolVar(&isJSON, "json", false, "Output in JSON format")
-	listCmd.Flags().BoolVarP(&isStream, "stream", "s", false, "Stream data")
+	listCmd.Flags().BoolVarP(&isStill, "still", "s", false, "Freeze data")
 
 	listCmd.SetHelpFunc(func(cmd *cobra.Command, args []string) {
 		fmt.Println("Usage:")
@@ -91,11 +91,11 @@ func init() {
 		fmt.Println("  chart config help")
 		fmt.Println("\nFlags:")
 		fmt.Println("  --json       Output in JSON format")
-		fmt.Println("  -s, --stream Stream data (for main list command only)")
+		fmt.Println("  -s, --still  Freeze data")
 		fmt.Println("\nAvailable Commands:")
 		fmt.Println("  stocks      List available stock charts")
 		fmt.Println("  crypto      List available crypto charts")
-		fmt.Println("  help      Help about any command")
+		fmt.Println("  help        Help about any command")
 		fmt.Println("\nUse \"chart [command] --help\" for more information about a command.")
 	})
 }

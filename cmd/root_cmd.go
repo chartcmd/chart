@@ -33,20 +33,20 @@ func handleChartCommand(cmd *cobra.Command, args []string) error {
 		// chart 4 charts at once of either crypto or stocks
 		ticker := args[0]
 		if ticker == "stocks" || ticker == "crypto" {
-			if isStream {
-				fmt.Printf("streaming 4 charts of %s", args[0])
-			} else {
+			if isStill {
 				fmt.Printf("4 charts of %s", args[0])
+			} else {
+				fmt.Printf("streaming 4 charts of %s", args[0])
 			}
 		} else {
-			err := chart.DrawChart(args[0], c.DefaultTimeFrame, isStream)
+			err := chart.DrawChart(args[0], c.DefaultTimeFrame, isStill)
 			if err != nil {
 				return fmt.Errorf("error: %s", err)
 			}
 		}
 	} else if len(args) == 2 {
 
-		err := chart.DrawChart(args[0], args[1], isStream)
+		err := chart.DrawChart(args[0], args[1], isStill)
 		if err != nil {
 			return fmt.Errorf("error: %s", err)
 		}
@@ -61,7 +61,7 @@ func init() {
 	rootCmd.AddCommand(listCmd)
 	rootCmd.AddCommand(configCmd)
 
-	rootCmd.Flags().BoolVarP(&isStream, "stream", "s", false, "Stream data")
+	rootCmd.Flags().BoolVarP(&isStill, "still", "s", false, "Freeze data")
 
 	rootCmd.SetHelpFunc(func(cmd *cobra.Command, args []string) {
 		fmt.Println("Usage:")
@@ -71,7 +71,7 @@ func init() {
 		fmt.Println("  chart config list [flags]")
 		fmt.Println("\nFlags:")
 		fmt.Println("  --json       Output in JSON format (for list commands)")
-		fmt.Println("  -s, --stream Stream data")
+		fmt.Println("  -s, --still  Freeze data")
 		fmt.Println("\nAvailable Commands:")
 		fmt.Println("  list        List available tickers")
 		fmt.Println("  config      Adjust config variables")
