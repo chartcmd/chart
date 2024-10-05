@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var validTickers = []string{"btc", "eth", "aapl", "googl", "msft"} // Add more as needed
+var validTickers = []string{"btc", "eth", "aapl", "googl", "msft"}
 
 var listCmd = &cobra.Command{
 	Use:   "list",
@@ -17,7 +17,6 @@ var listCmd = &cobra.Command{
 		data := map[string]interface{}{
 			"charts": validTickers,
 		}
-
 		if isJSON {
 			jsonData, _ := json.MarshalIndent(data, "", "  ")
 			fmt.Println(string(jsonData))
@@ -70,9 +69,18 @@ var listCryptoCmd = &cobra.Command{
 	},
 }
 
+var listHelpCmd = &cobra.Command{
+	Use:   "help",
+	Short: "Help about any command ",
+	Run: func(cmd *cobra.Command, args []string) {
+		cmd.Help()
+	},
+}
+
 func init() {
 	listCmd.AddCommand(listStocksCmd)
 	listCmd.AddCommand(listCryptoCmd)
+	listCmd.AddCommand(listHelpCmd)
 
 	listCmd.PersistentFlags().BoolVar(&isJSON, "json", false, "Output in JSON format")
 	listCmd.Flags().BoolVarP(&isStream, "stream", "s", false, "Stream data")
@@ -80,11 +88,14 @@ func init() {
 	listCmd.SetHelpFunc(func(cmd *cobra.Command, args []string) {
 		fmt.Println("Usage:")
 		fmt.Println("  chart list [stocks|crypto] [flags]")
+		fmt.Println("  chart config help")
 		fmt.Println("\nFlags:")
 		fmt.Println("  --json       Output in JSON format")
 		fmt.Println("  -s, --stream Stream data (for main list command only)")
 		fmt.Println("\nAvailable Commands:")
 		fmt.Println("  stocks      List available stock charts")
 		fmt.Println("  crypto      List available crypto charts")
+		fmt.Println("  help      Help about any command")
+		fmt.Println("\nUse \"chart [command] --help\" for more information about a command.")
 	})
 }

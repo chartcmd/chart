@@ -1,9 +1,7 @@
 package constants
 
 import (
-	"encoding/json"
 	"fmt"
-	"os"
 
 	"github.com/chartcmd/chart/pkg/utils"
 	"github.com/chartcmd/chart/pkg/utils/fetch/crypto"
@@ -90,6 +88,7 @@ var (
 		"bg_red":     "\033[101m",
 		"bg_green":   "\033[102m",
 		"bg_yellow":  "\033[103m",
+		"bg_purple":  "\033[44m",
 		"bg_blue":    "\033[44m",
 		"bg_magenta": "\033[105m",
 		"bg_cyan":    "\033[106m",
@@ -114,25 +113,24 @@ var (
 	ResetColor          string = "\033[0m"
 	SelectedColor       string = WhiteColor
 	UnselectedColor     string = ColorToAnsi["gray"]
-	Equities            []string
-	Crypto              []string
+	EquitiesWL          []string
+	CryptoWL            []string
+	DefaultTimeFrame    string = "1D"
 )
 
 func init() {
-	fileContent, err := os.ReadFile("~/.chart/config.json")
-	if err != nil {
-		fmt.Println("Error reading config file:", err)
-	} else {
-		err = json.Unmarshal(fileContent, &Config)
-		if err != nil {
-			fmt.Println("Error decoding JSON:", err)
-			os.Exit(1)
-		}
-		UpColor = ColorToAnsi[Config.UpColor]
-		DownColor = ColorToAnsi[Config.DownColor]
-		Equities = Config.EquitiesWatchlist
-		Crypto = Config.CryptoWatchlist
-	}
+
+	Config := utils.ReadConfig()
+
+	UpColor = ColorToAnsi[Config.UpColor]
+	DownColor = ColorToAnsi[Config.DownColor]
+	UpColorBold = ColorToAnsi[fmt.Sprintf("bold_%s", Config.UpColor)]
+	DownColorBold = ColorToAnsi[fmt.Sprintf("bold_%s", Config.DownColor)]
+	UpColorBg = ColorToAnsi[fmt.Sprintf("bg_%s", Config.UpColor)]
+	DownColorBg = ColorToAnsi[fmt.Sprintf("bg_%s", Config.DownColor)]
+	EquitiesWL = Config.EquitiesWatchlist
+	CryptoWL = Config.CryptoWatchlist
+	DefaultTimeFrame = Config.DefaultTimeFrame
 
 	// TODO make this refresh in display
 	width, height, err := term.GetSize(0)

@@ -10,6 +10,5 @@ func IsValidTicker(ticker string) bool {
 		fmt.Printf("error error: %s", err)
 		return false
 	}
-
 	return true
 }

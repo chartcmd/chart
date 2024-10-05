@@ -10,10 +10,19 @@ func fillLatestPriceLine(chartView *[][]string, candles []types.Candle, max floa
 	numCandles := len(candles)
 	candle := candles[numCandles-1]
 	var color string
+	var textColor string
+	var bgColor string
 	if candle.IsGreen {
 		color = c.UpColorBold
+		bgColor = c.UpColorBg
 	} else {
 		color = c.DownColorBold
+		bgColor = c.DownColorBg
+	}
+	if color == c.ColorToAnsi["bold_white"] {
+		textColor = c.ColorToAnsi["bold_black"]
+	} else {
+		textColor = c.ColorToAnsi["bold_white"]
 	}
 
 	colIdx := int(c.ChartBodyCols) + 1
@@ -23,11 +32,6 @@ func fillLatestPriceLine(chartView *[][]string, candles []types.Candle, max floa
 		(*chartView)[rowIdx][colIdx+i+1] = utils.Fill(c.LatestPrice, color)
 	}
 
-	if candle.IsGreen {
-		color = c.UpColorBg
-	} else {
-		color = c.DownColorBg
-	}
 	sliceAmount := maxPriceLabel - 2
 	var labelStr string = float64ToStr(candle.Close)
 	if len(labelStr) >= sliceAmount {
@@ -35,7 +39,8 @@ func fillLatestPriceLine(chartView *[][]string, candles []types.Candle, max floa
 	}
 	priceColIdx := int(c.ChartBodyLeftPadding) + int(c.ChartBodyRightPadding) + 1
 	for i, letter := range labelStr {
-		(*chartView)[rowIdx][colIdx+i+priceColIdx] = utils.Fill(string(letter), color)
+		letter_str := utils.Fill(string(letter), textColor)
+		(*chartView)[rowIdx][colIdx+i+priceColIdx] = utils.Fill(letter_str, bgColor)
 	}
 
 }

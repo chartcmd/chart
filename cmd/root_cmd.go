@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	c "github.com/chartcmd/chart/constants"
 	"github.com/chartcmd/chart/pkg/chart"
 	"github.com/spf13/cobra"
 )
@@ -30,10 +31,18 @@ func handleChartCommand(cmd *cobra.Command, args []string) error {
 	} else if len(args) == 1 {
 		// TODO
 		// chart 4 charts at once of either crypto or stocks
-		if isStream {
-			fmt.Printf("streaming 4 charts of %s", args[0])
+		ticker := args[0]
+		if ticker == "stocks" || ticker == "crypto" {
+			if isStream {
+				fmt.Printf("streaming 4 charts of %s", args[0])
+			} else {
+				fmt.Printf("4 charts of %s", args[0])
+			}
 		} else {
-			fmt.Printf("4 charts of %s", args[0])
+			err := chart.DrawChart(args[0], c.DefaultTimeFrame, isStream)
+			if err != nil {
+				return fmt.Errorf("error: %s", err)
+			}
 		}
 	} else if len(args) == 2 {
 
@@ -58,11 +67,14 @@ func init() {
 		fmt.Println("Usage:")
 		fmt.Println("  chart <ticker> <interval> [flags]")
 		fmt.Println("  chart list [stocks|crypto] [flags]")
+		fmt.Println("  chart config [set|add|pop] [key] [value]")
+		fmt.Println("  chart config list [flags]")
 		fmt.Println("\nFlags:")
 		fmt.Println("  --json       Output in JSON format (for list commands)")
 		fmt.Println("  -s, --stream Stream data")
 		fmt.Println("\nAvailable Commands:")
 		fmt.Println("  list        List available tickers")
+		fmt.Println("  config      Adjust config variables")
 		fmt.Println("  help        Help about any command")
 		fmt.Println("\nUse \"chart [command] --help\" for more information about a command.")
 	})

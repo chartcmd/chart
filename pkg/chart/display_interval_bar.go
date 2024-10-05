@@ -18,6 +18,7 @@ func DisplayIntervalBar(selectedIntervalIdx int) {
 		}
 		baseStr += fmt.Sprintf("%*s%s%*s", c.IntervalBarPadding, "", interval, c.IntervalBarPadding, "")
 	}
+	// leftPadding := (c.ChartBodyCols - len(baseStr)) / 2
 	leftPadding := (c.ChartBodyCols - 35) / 2
 	fmt.Printf("%*s%s", leftPadding, "", baseStr)
 }

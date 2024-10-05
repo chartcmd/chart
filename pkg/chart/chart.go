@@ -120,6 +120,8 @@ func drawChartStream(ticker string, intervalIdx int) error {
 					log.Printf("Error getting candles for new interval: %v", err)
 					continue
 				}
+				curCandle = initCurCandle(newCandles[len(newCandles)-1].Close, newCandles[len(newCandles)-1])
+				newCandles = append(newCandles[1:], curCandle)
 				candles = newCandles
 				granularity = c.IntervalToGranularity[interval]
 

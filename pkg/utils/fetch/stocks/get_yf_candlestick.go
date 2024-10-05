@@ -12,18 +12,10 @@ import (
 	"github.com/shopspring/decimal"
 )
 
-/*
-*
-
-15m -> data from today
-1h -> data from start of week
-1d -> 72 days
-*/
 func isWeekend(t time.Time) bool {
 	return t.Weekday() == time.Saturday || t.Weekday() == time.Sunday
 }
 
-// calculateStartDate calculates the start date accounting for weekends and holidays
 func calculateStartDate(end time.Time, totalDuration time.Duration) time.Time {
 	start := end
 	for totalDuration > 0 {
