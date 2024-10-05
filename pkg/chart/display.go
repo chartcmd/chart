@@ -9,7 +9,7 @@ import (
 	"github.com/chartcmd/chart/pkg/utils"
 )
 
-func display(ticker string, latestPrice float64, chart string, pctChange float64, intervalIdx int) {
+func display(ticker string, latestPrice float64, chart string, pctChange float64) {
 	utils.ClearScreen()
 	now := time.Now()
 	timeString := now.Format("15:04:05")
@@ -31,5 +31,4 @@ func display(ticker string, latestPrice float64, chart string, pctChange float64
 	}
 
 	fmt.Println(chart + c.ResetColor)
-	DisplayIntervalBar(intervalIdx)
 }

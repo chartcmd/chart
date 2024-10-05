@@ -135,7 +135,7 @@ func init() {
 	if err == nil {
 		ChartBodyCols = uint32(utils.GetClosestNumDivBy(2, width-15))
 		// TODO subtract ChartBodyRows by 2 more for the timeframe viewer
-		ChartBodyRows = uint32(utils.GetClosestNumDivBy(4, height-7)) - 3
+		ChartBodyRows = uint32(utils.GetClosestNumDivBy(4, height-7)) - 5
 		NumCandles = ChartBodyCols
 		NumYLabels = uint32(ChartBodyRows / 6)
 		NumXLabels = uint32(ChartBodyCols/12) + 1

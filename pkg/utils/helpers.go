@@ -59,7 +59,7 @@ func RemoveString(slice []string, s string) []string {
 
 func IndexOf(slice []string, element string) int {
 	for i, elem := range slice {
-		if elem == element {
+		if strings.EqualFold(elem, element) {
 			return i
 		}
 	}

@@ -9,7 +9,15 @@ import (
 	c "github.com/chartcmd/chart/constants"
 	utils "github.com/chartcmd/chart/pkg/utils"
 	"github.com/chartcmd/chart/pkg/utils/build_chart"
+	"github.com/chartcmd/chart/pkg/utils/fetch/stocks"
 )
+
+/**
+Refactor:
+Move all files except chart.go to utils/build_chart
+Create a ChartConfig type that stores the info in constants, as well frequent params passed into funcs
+Init this DrawChart -> chartConfig := createChartConfig(ticker, interval)
+*/
 
 type InputData struct {
 	X int
@@ -38,6 +46,17 @@ func drawChartStream(ticker string, intervalIdx int) error {
 	numIntervals := len(c.Intervals)
 	interval := c.Intervals[intervalIdx]
 	granularity := c.IntervalToGranularity[interval]
+
+	var watchlist []string
+	if utils.StrSliceContains(c.CryptoList, ticker, false) {
+		watchlist = c.CryptoWL
+	} else if stocks.IsValidTicker(ticker) {
+		watchlist = c.EquitiesWL
+	}
+	tickerIdx := utils.IndexOf(watchlist, ticker)
+	numTickers := len(watchlist)
+
+	isCursorOnInterval := 1
 
 	candles, err := getCandles(ticker, interval)
 	if err != nil {
@@ -93,7 +112,10 @@ func drawChartStream(ticker string, intervalIdx int) error {
 
 			chart := build_chart.BuildChart(candles)
 			pctChange := ((candles[len(candles)-1].Close - candles[0].Open) / candles[0].Open) * 100
-			display(ticker, latestPrice, chart, pctChange, intervalIdx)
+			display(ticker, latestPrice, chart, pctChange)
+			displayBar(intervalIdx, c.Intervals, isCursorOnInterval == 1)
+			fmt.Println()
+			displayBar(tickerIdx, watchlist, isCursorOnInterval == 0)
 
 		case <-nextCandleTimer.C:
 			newCandles, err := getCandles(ticker, interval)
@@ -109,13 +131,26 @@ func drawChartStream(ticker string, intervalIdx int) error {
 
 		case input := <-inputChan:
 			if input.X == 1 {
-				intervalIdx = int(math.Min(float64(numIntervals-1), float64(intervalIdx+1)))
+				if isCursorOnInterval == 1 {
+					intervalIdx = int(math.Min(float64(numIntervals-1), float64(intervalIdx+1)))
+				} else {
+					tickerIdx = int(math.Min(float64(numTickers-1), float64(tickerIdx+1)))
+				}
 			} else if input.X == -1 {
-				intervalIdx = int(math.Max(0, float64(intervalIdx-1)))
+				if isCursorOnInterval == 1 {
+					intervalIdx = int(math.Max(0, float64(intervalIdx-1)))
+				} else {
+					tickerIdx = int(math.Max(0, float64(tickerIdx-1)))
+				}
+			} else if input.Y == 1 {
+				isCursorOnInterval = int(math.Min(1, float64(isCursorOnInterval)) + 1)
+			} else if input.Y == -1 {
+				isCursorOnInterval = int(math.Max(0, float64(isCursorOnInterval)) - 1)
 			}
 
 			if input.X != 0 {
 				interval = c.Intervals[intervalIdx]
+				ticker = watchlist[tickerIdx]
 				newCandles, err := getCandles(ticker, interval)
 				if err != nil {
 					log.Printf("Error getting candles for new interval: %v", err)
@@ -151,6 +186,7 @@ func drawChart(ticker string, intervalIdx int) error {
 	pctChange := ((candles[len(candles)-1].Close - candles[0].Open) / candles[0].Open) * 100
 
 	chart := build_chart.BuildChart(candles)
-	display(ticker, latestPrice, chart, pctChange, intervalIdx)
+	display(ticker, latestPrice, chart, pctChange)
+	// displayIntervalBar(intervalIdx)
 	return nil
 }
