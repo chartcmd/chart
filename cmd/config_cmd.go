@@ -49,6 +49,14 @@ var configListCmd = &cobra.Command{
 	},
 }
 
+var configOptionsCmd = &cobra.Command{
+	Use:   "options",
+	Short: "List available options for each config variable",
+	Run: func(cmd *cobra.Command, args []string) {
+		config.OptionsConfig()
+	},
+}
+
 var configHelpCmd = &cobra.Command{
 	Use:   "help",
 	Short: "Help about any command ",
@@ -64,12 +72,14 @@ func init() {
 	configCmd.AddCommand(configPopCmd)
 	configCmd.AddCommand(configListCmd)
 	configCmd.AddCommand(configHelpCmd)
+	configCmd.AddCommand(configOptionsCmd)
 
 	configCmd.SetHelpFunc(func(cmd *cobra.Command, args []string) {
 		fmt.Println("Usage:")
 		fmt.Println("  chart config [set|add|pop] [key] [value]")
 		fmt.Println("  chart config list [flags]")
 		fmt.Println("  chart config help")
+		fmt.Println("  chart config options")
 		fmt.Println("\nFlags:")
 		fmt.Println("  --json    Output in JSON format")
 		fmt.Println("\nAvailable Commands:")
@@ -77,6 +87,7 @@ func init() {
 		fmt.Println("  add       Add config to variable")
 		fmt.Println("  pop       Pop config from variable")
 		fmt.Println("  list      List config variables")
+		fmt.Println("  options   List available options for each config variable")
 		fmt.Println("  help      Help about any command")
 		fmt.Println("\nUse \"chart [command] --help\" for more information about a command.")
 	})
