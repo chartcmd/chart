@@ -143,9 +143,9 @@ func drawChartStream(ticker string, intervalIdx int) error {
 					tickerIdx = int(math.Max(0, float64(tickerIdx-1)))
 				}
 			} else if input.Y == 1 {
-				isCursorOnInterval = int(math.Min(1, float64(isCursorOnInterval)) + 1)
+				isCursorOnInterval = int(math.Min(1, float64(isCursorOnInterval+1)))
 			} else if input.Y == -1 {
-				isCursorOnInterval = int(math.Max(0, float64(isCursorOnInterval)) - 1)
+				isCursorOnInterval = int(math.Max(0, float64(isCursorOnInterval-1)))
 			}
 
 			if input.X != 0 {
