@@ -29,7 +29,7 @@ var configAddCmd = &cobra.Command{
 	Use:   "add",
 	Short: "Add config to variable",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return config.AddConfig(args[0], args[1])
+		return config.AddConfig(args[0], args[1:])
 	},
 }
 
@@ -37,7 +37,7 @@ var configPopCmd = &cobra.Command{
 	Use:   "pop",
 	Short: "Remove config from variable",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return config.PopConfig(args[0], args[1])
+		return config.PopConfig(args[0], args[1:])
 	},
 }
 

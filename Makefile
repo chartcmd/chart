@@ -7,8 +7,9 @@ BINARY_NAME=chart
 BINARY_UNIX=$(BINARY_NAME)
 
 init:
-	sudo mkdir ~/.$(BINARY_NAME)
-	sudo touch ~/.$(BINARY_NAME)/config.json
+	sudo mkdir ~/.config
+	sudo mkdir ~/.config/$(BINARY_NAME)
+	sudo touch ~/.config/$(BINARY_NAME)/config.json
 
 build:
 	$(GOBUILD) -o out/bin/$(BINARY_NAME) -v ./cmd

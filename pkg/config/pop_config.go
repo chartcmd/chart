@@ -9,24 +9,28 @@ import (
 	"github.com/chartcmd/chart/pkg/utils/fetch/stocks"
 )
 
-func PopConfig(key, value string) error {
+func PopConfig(key string, values []string) error {
 	config := utils.ReadConfig()
 
 	switch key {
 	case "equities_wl":
-		if stocks.IsValidTicker(value) {
-			config.EquitiesWatchlist = utils.RemoveString(config.EquitiesWatchlist, strings.ToUpper(value))
-		} else {
-			return fmt.Errorf("invalid equities ticker: %s", value)
+		for _, ticker := range values {
+			if stocks.IsValidTicker(ticker) {
+				config.EquitiesWatchlist = utils.RemoveString(config.EquitiesWatchlist, strings.ToUpper(ticker))
+			} else {
+				return fmt.Errorf("invalid equities ticker: %s", ticker)
+			}
 		}
 	case "crypto_wl":
-		if utils.StrSliceContains(c.CryptoList, value, false) {
-			config.CryptoWatchlist = utils.RemoveString(config.CryptoWatchlist, strings.ToUpper(value))
-		} else {
-			return fmt.Errorf("invalid crypto ticker: %s", value)
+		for _, ticker := range values {
+			if utils.StrSliceContains(c.CryptoList, ticker, false) {
+				config.CryptoWatchlist = utils.RemoveString(config.CryptoWatchlist, strings.ToUpper(ticker))
+			} else {
+				return fmt.Errorf("invalid crypto ticker: %s", ticker)
+			}
 		}
 	case "up_color", "down_color", "default_tf":
-		return fmt.Errorf("use chart config set %s %s", key, value)
+		return fmt.Errorf("use chart config set %s %s", key, values)
 	default:
 		return fmt.Errorf("unknown config key: %s", key)
 	}

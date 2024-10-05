@@ -69,7 +69,6 @@ var (
 		"cyan":    "\033[96m",
 		"white":   "\033[97m",
 		"gray":    "\033[90m",
-		"pink":    "\033[94m",
 
 		// bold + colored
 		"bold_black":   "\033[1;30m",
@@ -81,7 +80,6 @@ var (
 		"bold_cyan":    "\033[1;96m",
 		"bold_white":   "\033[1;97m",
 		"bold_gray":    "\033[1;90m",
-		"bold_pink":    "\033[1;94m",
 
 		// bg colors
 		"bg_black":   "\033[40m",
