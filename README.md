@@ -21,6 +21,7 @@ After verifying all prerequisites, run these commands in your terminal
 git clone https://github.com/chartcmd/chart
 cd chart
 make prod-mac
+make init
 chart
 ```
 You can run this command from anywhere in your terminal after installation. Be sure to increase the size of your terminal window for the best experience :)
